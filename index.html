@@ -31,98 +31,95 @@
             box-shadow: none;
             width: 0;
             height: 0;
-            /* デフォルトのポインター動作を無効化 */
             pointer-events: none; 
         }
 
-        /* ホットスポットがフォーカスされた時の枠線を消す */
         .Hotspot:focus {
             outline: none;
         }
 
-        /* デザインコンテナ 
-           ここを起点にラインとテキストを描画します
-        */
+        /* デザインコンテナ */
         .HotspotAnnotation {
             position: absolute;
-            transform: translate(0, 0); /* 基準点 */
+            transform: translate(0, 0);
             pointer-events: none;
         }
 
-        /* √（ルート）型のラインを描画 
-           SVGを使って「斜め上がり→水平」のラインを表現
+        /* √（ルート）型のライン 
+           サイズをコンパクトにし、色を薄い水色に変更
         */
         .line-connector {
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 120px;
-            height: 60px;
+            width: 80px; /* 長さを短縮 */
+            height: 40px; /* 高さを短縮 */
             fill: none;
-            stroke: #00d2ff; /* シアン色（オーラ風） */
-            stroke-width: 2;
+            stroke: #ccffff; /* 薄い水色 */
+            stroke-width: 1.5; /* 少し細く */
             stroke-linecap: square;
-            filter: drop-shadow(0 0 4px rgba(0, 210, 255, 0.6)); /* 光る演出 */
-            /* アニメーションでラインが伸びる演出を入れる場合ここにtransition */
+            opacity: 0.8; /* 少し透け感を出す */
+            filter: drop-shadow(0 0 3px rgba(204, 255, 255, 0.4));
         }
 
         /* テキスト情報のコンテナ */
         .data-card {
             position: absolute;
-            left: 60px; /* ラインの水平部分開始位置に合わせる */
-            bottom: 45px; /* ラインの上に載るように調整 */
-            color: #fff;
-            font-size: 12px;
-            line-height: 1.4;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            left: 35px; /* ラインの折れ曲がり位置に合わせる */
+            bottom: 28px; /* ラインの上に載るよう調整 */
+            color: #ccffff; /* ラインと同じ薄い水色 */
+            font-size: 10px; /* 文字サイズを少し小さく */
+            line-height: 1.2;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
             white-space: nowrap;
             opacity: 0.9;
         }
 
-        /* 各項目のレイアウト */
+        /* 各項目のレイアウト：コンパクト化 */
         .data-row {
             display: flex;
-            justify-content: space-between;
-            width: 140px; /* 幅を固定して整列 */
-            margin-bottom: 2px;
+            align-items: center;
+            margin-bottom: 1px;
         }
 
         .label {
-            color: #aaa;
-            font-size: 10px;
-            margin-right: 10px;
+            font-weight: normal;
+            margin-right: 4px; /* 項目とコロンの間隔 */
+            opacity: 0.8;
+        }
+
+        .separator {
+            margin-right: 4px; /* コロンと数値の間隔 */
+            opacity: 0.6;
         }
 
         .value {
-            color: #fff;
             font-weight: bold;
-            font-family: 'Courier New', monospace; /* デジタル数値風 */
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
         }
 
-        /* プログレスバーのスタイル（デフォルト） */
+        /* ロード中のプログレスバー（必要最低限） */
         .progress-bar {
             display: block;
             width: 33%;
-            height: 10%;
-            max-height: 2%;
+            height: 4px;
             position: absolute;
             left: 50%;
             top: 50%;
-            transform: translate3d(-50%, -50%, 0);
-            border-radius: 25px;
-            box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.5), 0px 0px 5px 1px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            background-color: rgba(0, 0, 0, 0.5);
+            transform: translate(-50%, -50%);
+            border-radius: 2px;
+            background-color: rgba(255, 255, 255, 0.2);
         }
         .progress-bar.hide {
             visibility: hidden;
             transition: visibility 0.3s;
         }
         .update-bar {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #ccffff;
             width: 0%;
             height: 100%;
-            border-radius: 25px;
+            border-radius: 2px;
             float: left;
             transition: width 0.3s;
         }
@@ -135,64 +132,65 @@
         ar 
         ar-modes="scene-viewer webxr quick-look" 
         camera-controls 
+        auto-rotate 
+        rotation-per-second="-10deg" 
         tone-mapping="neutral" 
         poster="poster.webp" 
         shadow-intensity="1" 
-        rotation-per-second="-18deg" 
         style="background-color: #000000;">
 
         <button class="Hotspot" slot="hotspot-2" data-position="0.8506107981207202m 0.31465080095950104m 1.1898584783314305m" data-normal="0.9928137094755322m -0.1183302567176411m -0.017857452857865937m" data-visibility-attribute="visible">
             <div class="HotspotAnnotation">
-                <svg class="line-connector" viewBox="0 0 120 60">
-                    <polyline points="0,60 40,40 120,40" />
-                    <circle cx="0" cy="60" r="2" fill="#00d2ff"/>
+                <svg class="line-connector" viewBox="0 0 80 40">
+                    <polyline points="0,40 25,25 80,25" />
+                    <circle cx="0" cy="40" r="1.5" fill="#ccffff"/>
                 </svg>
                 <div class="data-card">
-                    <div class="data-row"><span class="label">残溝</span><span class="value">4.5mm</span></div>
-                    <div class="data-row"><span class="label">空気圧</span><span class="value">240kPa</span></div>
-                    <div class="data-row"><span class="label">製造年週</span><span class="value">3625</span></div>
+                    <div class="data-row"><span class="label">残溝</span><span class="separator">:</span><span class="value">4.5mm</span></div>
+                    <div class="data-row"><span class="label">空気圧</span><span class="separator">:</span><span class="value">240kPa</span></div>
+                    <div class="data-row"><span class="label">製造年週</span><span class="separator">:</span><span class="value">3625</span></div>
                 </div>
             </div>
         </button>
 
         <button class="Hotspot" slot="hotspot-4" data-position="0.8501776913115712m 0.3130588222224413m -1.391294624232213m" data-normal="0.9930991435531702m -0.08257095696621546m -0.08328342055681504m" data-visibility-attribute="visible">
             <div class="HotspotAnnotation">
-                <svg class="line-connector" viewBox="0 0 120 60">
-                    <polyline points="0,60 40,40 120,40" />
-                    <circle cx="0" cy="60" r="2" fill="#00d2ff"/>
+                <svg class="line-connector" viewBox="0 0 80 40">
+                    <polyline points="0,40 25,25 80,25" />
+                    <circle cx="0" cy="40" r="1.5" fill="#ccffff"/>
                 </svg>
                 <div class="data-card">
-                    <div class="data-row"><span class="label">残溝</span><span class="value">4.5mm</span></div>
-                    <div class="data-row"><span class="label">空気圧</span><span class="value">240kPa</span></div>
-                    <div class="data-row"><span class="label">製造年週</span><span class="value">3625</span></div>
+                    <div class="data-row"><span class="label">残溝</span><span class="separator">:</span><span class="value">4.5mm</span></div>
+                    <div class="data-row"><span class="label">空気圧</span><span class="separator">:</span><span class="value">240kPa</span></div>
+                    <div class="data-row"><span class="label">製造年週</span><span class="separator">:</span><span class="value">3625</span></div>
                 </div>
             </div>
         </button>
 
         <button class="Hotspot" slot="hotspot-7" data-position="-0.8505870130478236m 0.31445190330958755m 1.1898792789765311m" data-normal="-0.9928137144091016m -0.11833025774613729m -0.01785717175074158m" data-visibility-attribute="visible">
             <div class="HotspotAnnotation">
-                <svg class="line-connector" viewBox="0 0 120 60">
-                    <polyline points="0,60 40,40 120,40" />
-                    <circle cx="0" cy="60" r="2" fill="#00d2ff"/>
+                <svg class="line-connector" viewBox="0 0 80 40">
+                    <polyline points="0,40 25,25 80,25" />
+                    <circle cx="0" cy="40" r="1.5" fill="#ccffff"/>
                 </svg>
                 <div class="data-card">
-                    <div class="data-row"><span class="label">残溝</span><span class="value">4.5mm</span></div>
-                    <div class="data-row"><span class="label">空気圧</span><span class="value">240kPa</span></div>
-                    <div class="data-row"><span class="label">製造年週</span><span class="value">3625</span></div>
+                    <div class="data-row"><span class="label">残溝</span><span class="separator">:</span><span class="value">4.5mm</span></div>
+                    <div class="data-row"><span class="label">空気圧</span><span class="separator">:</span><span class="value">240kPa</span></div>
+                    <div class="data-row"><span class="label">製造年週</span><span class="separator">:</span><span class="value">3625</span></div>
                 </div>
             </div>
         </button>
 
         <button class="Hotspot" slot="hotspot-8" data-position="-0.8506769324751327m 0.31718907552770165m -1.3847075481899656m" data-normal="-0.9924380174145004m -0.057323964637510355m 0.1085391388790854m" data-visibility-attribute="visible">
             <div class="HotspotAnnotation">
-                <svg class="line-connector" viewBox="0 0 120 60">
-                    <polyline points="0,60 40,40 120,40" />
-                    <circle cx="0" cy="60" r="2" fill="#00d2ff"/>
+                <svg class="line-connector" viewBox="0 0 80 40">
+                    <polyline points="0,40 25,25 80,25" />
+                    <circle cx="0" cy="40" r="1.5" fill="#ccffff"/>
                 </svg>
                 <div class="data-card">
-                    <div class="data-row"><span class="label">残溝</span><span class="value">4.5mm</span></div>
-                    <div class="data-row"><span class="label">空気圧</span><span class="value">240kPa</span></div>
-                    <div class="data-row"><span class="label">製造年週</span><span class="value">3625</span></div>
+                    <div class="data-row"><span class="label">残溝</span><span class="separator">:</span><span class="value">4.5mm</span></div>
+                    <div class="data-row"><span class="label">空気圧</span><span class="separator">:</span><span class="value">240kPa</span></div>
+                    <div class="data-row"><span class="label">製造年週</span><span class="separator">:</span><span class="value">3625</span></div>
                 </div>
             </div>
         </button>
@@ -200,12 +198,7 @@
         <div class="progress-bar hide" slot="progress-bar">
             <div class="update-bar"></div>
         </div>
-        <button slot="ar-button" id="ar-button">
-            View in your space
-        </button>
-        <div id="ar-prompt">
-            <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
-        </div>
+        
     </model-viewer>
 
 </body>
