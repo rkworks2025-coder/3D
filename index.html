@@ -23,7 +23,42 @@
             height: 100%;
         }
 
-        /* ホットスポットの基準点スタイル */
+        /* ----------------------------------------------------
+           タイプライター風情報パネル (左上)
+           ---------------------------------------------------- */
+        #info-panel {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #ccffff; /* テーマカラー */
+            font-family: 'Courier New', monospace; /* 等幅フォント */
+            font-size: 14px;
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(204, 255, 255, 0.5);
+            pointer-events: none; /* 3D操作の邪魔にならないように */
+            z-index: 10;
+        }
+
+        /* 四角いカーソル */
+        .cursor {
+            display: inline-block;
+            vertical-align: bottom;
+            width: 10px;
+            height: 16px;
+            background-color: #ccffff;
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+        }
+
+        /* カーソルの点滅アニメーション */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ----------------------------------------------------
+           3Dモデル用ホットスポット設定
+           ---------------------------------------------------- */
         .Hotspot {
             background: transparent;
             border-radius: 0;
@@ -33,22 +68,18 @@
             height: 0;
             pointer-events: none; 
         }
+        .Hotspot:focus { outline: none; }
 
-        .Hotspot:focus {
-            outline: none;
-        }
-
-        /* デザインコンテナ */
         .HotspotAnnotation {
             position: absolute;
             transform: translate(0, 0);
             pointer-events: none;
         }
 
-        /* √（ルート）型のライン：上下反転版 */
+        /* √型ライン（上下反転） */
         .line-connector {
             position: absolute;
-            top: 0; /* 位置基準を上へ */
+            top: 0;
             left: 0;
             width: 80px;
             height: 40px;
@@ -60,11 +91,11 @@
             filter: drop-shadow(0 0 3px rgba(204, 255, 255, 0.4));
         }
 
-        /* テキスト情報のコンテナ：バーの下側へ配置 */
+        /* 数値カード（ラインの下） */
         .data-card {
             position: absolute;
-            left: 35px; /* 水平線の開始位置に合わせる */
-            top: 18px; /* 反転した水平線の下側に配置 */
+            left: 35px;
+            top: 18px;
             color: #ccffff;
             font-size: 10px;
             line-height: 1.2;
@@ -73,31 +104,12 @@
             opacity: 0.9;
         }
 
-        /* 各項目のレイアウト */
-        .data-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1px;
-        }
+        .data-row { display: flex; align-items: center; margin-bottom: 1px; }
+        .label { font-weight: normal; margin-right: 4px; opacity: 0.8; }
+        .separator { margin-right: 4px; opacity: 0.6; }
+        .value { font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
 
-        .label {
-            font-weight: normal;
-            margin-right: 4px;
-            opacity: 0.8;
-        }
-
-        .separator {
-            margin-right: 4px;
-            opacity: 0.6;
-        }
-
-        .value {
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.5px;
-        }
-
-        /* ロード中のプログレスバー */
+        /* プログレスバー */
         .progress-bar {
             display: block;
             width: 33%;
@@ -109,10 +121,7 @@
             border-radius: 2px;
             background-color: rgba(255, 255, 255, 0.2);
         }
-        .progress-bar.hide {
-            visibility: hidden;
-            transition: visibility 0.3s;
-        }
+        .progress-bar.hide { visibility: hidden; transition: visibility 0.3s; }
         .update-bar {
             background-color: #ccffff;
             width: 0%;
@@ -124,6 +133,10 @@
     </style>
 </head>
 <body>
+
+    <div id="info-panel">
+        <span id="typewriter-text"></span><span class="cursor"></span>
+    </div>
 
     <model-viewer 
         src="2024_nissan_note_aura_nismo_e-power_4wd_fsne13.glb" 
@@ -199,6 +212,47 @@
         </div>
         
     </model-viewer>
+
+    <script>
+        const textToType = [
+            "Station：タイムズ大和柳橋",
+            "Model：Nissan Note 1200 e-POWER",
+            "Plate：相模501ワ6380",
+            "前回点検日：2026/01/22"
+        ];
+
+        const outputDiv = document.getElementById('typewriter-text');
+        let lineIndex = 0;
+        let charIndex = 0;
+        const typingSpeed = 50; // 打鍵速度 (ms)
+        const linePause = 400;  // 改行時の待機時間 (ms)
+
+        function typeWriter() {
+            if (lineIndex < textToType.length) {
+                // 現在の行の文字列を取得
+                const currentLine = textToType[lineIndex];
+
+                if (charIndex < currentLine.length) {
+                    // 1文字ずつ追加
+                    outputDiv.innerHTML += currentLine.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, typingSpeed);
+                } else {
+                    // 行末まで来たら改行して次の行へ
+                    outputDiv.innerHTML += "<br>";
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeWriter, linePause);
+                }
+            }
+            // 全て完了したらカーソルはCSSのanimationで点滅し続ける
+        }
+
+        // 読み込み完了後に開始
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter, 1000); // 1秒後に開始
+        });
+    </script>
 
 </body>
 </html>
